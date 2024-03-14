@@ -1,38 +1,86 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <title>Drag and Drop Example</title>
-    <style>
-        .day { width: 200px; height: 100%; padding: 10px; border: 1px solid #ccc; }
-        .artist { padding: 10px; border: 1px solid #000; margin-bottom: 10px; cursor: move; }
-    </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Music Festival Schedule</title>
+<style>
+body, html {
+  height: 100%;
+  margin: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: #f0f0f0;
+}
+.schedule {
+  display: flex;
+  width: 100%;
+}
+.day {
+  flex-grow: 1;
+  margin: 10px;
+  padding: 10px;
+  background-color: #ddd;
+  min-height: 90vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+.thursday { background-color: lightblue; }
+.friday { background-color: lightgreen; }
+.saturday { background-color: lightpink; }
+.sunday { background-color: lightyellow; }
+.artist {
+  margin: 5px;
+  padding: 5px;
+  width: 90%;
+  text-align: center;
+  cursor: grab;
+}
+</style>
 </head>
 <body>
-
-<div id="day1" class="day" ondrop="drop(event)" ondragover="allowDrop(event)">
-    <div id="artist1" class="artist" draggable="true" ondragstart="drag(event)">Artist 1</div>
-    <div id="artist2" class="artist" draggable="true" ondragstart="drag(event)">Artist 2</div>
+<div class="schedule">
+  <div id="Thursday" class="day thursday">Thursday</div>
+  <div id="Friday" class="day friday">Friday</div>
+  <div id="Saturday" class="day saturday">Saturday</div>
+  <div id="Sunday" class="day sunday">Sunday</div>
 </div>
+<button id="saveSchedule">Save My Schedule</button>
 
-<div id="day2" class="day" ondrop="drop(event)" ondragover="allowDrop(event)">
-    <!-- Artists will be dropped here -->
-</div>
-
+<script src="https://html2canvas.hertzen.com/dist/html2canvas.min.js"></script>
 <script>
-function allowDrop(ev) {
-    ev.preventDefault();
+const festivalSchedule = {
+  Thursday: ["PRETTY LIGHTS", "FISHER", "BIGXTHAPLUG", "DISCO LINES", ...],
+  Friday: ["POST MALONE", "MAGGIE ROGERS", "KHRUANGBIN", "SEVEN LIONS", ...],
+  Saturday: ["RED HOT CHILI PEPPERS", "CAGE THE ELEPHANT", "MELANIE MARTINEZ", "IDLES", ...],
+  Sunday: ["FRED AGAIN..", "MEGAN THEE STALLION", "JASON ISBELL & THE 400 UNIT", "TWO FRIENDS", ...]
+};
+// Populate the artists
+document.addEventListener("DOMContentLoaded", function() {
+  Object.keys(festivalSchedule).forEach(day => {
+    const dayDiv = document.getElementById(day);
+    festivalSchedule[day].forEach(artist => {
+      const artistDiv = document.createElement("div");
+      artistDiv.className = "artist";
+      artistDiv.innerText = artist;
+      artistDiv.draggable = true;
+      artistDiv.addEventListener('dragstart', dragStart);
+      dayDiv.appendChild(artistDiv);
+    });
+  });
+});
+
+function dragStart(event) {
+  event.dataTransfer.setData("text/plain", event.target.innerText);
 }
 
-function drag(ev) {
-    ev.dataTransfer.setData("text", ev.target.id);
-}
-
-function drop(ev) {
-    ev.preventDefault();
-    var data = ev.dataTransfer.getData("text");
-    ev.target.appendChild(document.getElementById(data));
-}
+document.getElementById('saveSchedule').addEventListener('click', function() {
+  html2canvas(document.querySelector(".schedule")).then(canvas => {
+    // Implement image saving functionality here
+  });
+});
 </script>
-
 </body>
 </html>
