@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Drag and Drop Example</title>
+    <style>
+        .day { width: 200px; height: 100%; padding: 10px; border: 1px solid #ccc; }
+        .artist { padding: 10px; border: 1px solid #000; margin-bottom: 10px; cursor: move; }
+    </style>
+</head>
+<body>
+
+<div id="day1" class="day" ondrop="drop(event)" ondragover="allowDrop(event)">
+    <div id="artist1" class="artist" draggable="true" ondragstart="drag(event)">Artist 1</div>
+    <div id="artist2" class="artist" draggable="true" ondragstart="drag(event)">Artist 2</div>
+</div>
+
+<div id="day2" class="day" ondrop="drop(event)" ondragover="allowDrop(event)">
+    <!-- Artists will be dropped here -->
+</div>
+
+<script>
+function allowDrop(ev) {
+    ev.preventDefault();
+}
+
+function drag(ev) {
+    ev.dataTransfer.setData("text", ev.target.id);
+}
+
+function drop(ev) {
+    ev.preventDefault();
+    var data = ev.dataTransfer.getData("text");
+    ev.target.appendChild(document.getElementById(data));
+}
+</script>
+
+</body>
+</html>
